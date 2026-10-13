@@ -1,0 +1,3 @@
+Sample file for making changes 
+and see switching of instances 
+in the Blue-Green Deployment strategy.
