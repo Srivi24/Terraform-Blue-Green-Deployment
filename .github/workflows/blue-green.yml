@@ -35,34 +35,41 @@ jobs:
         
       # Initialize your Terraform configuration
       - name: Initialize Terraform
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         run: terraform init
 
       # Validate your Terraform configuration
       - name: Validate Terraform
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         run: terraform validate -json
 
       # Generate and display an execution plan
       - name: Terraform execution plan
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         run: |
           terraform plan -out='tfplan'
           terraform show 'tfplan'
         
       # Apply the changes required to reach the desired state of the configuration
       - name: Apply terraform changes
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         run: terraform apply -auto-approve tfplan
 
       # Check the status of the Blue environment (pseudo-code)
       - name: Blue environment status
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         id: blue_status
         run: echo '::set-output name=status::$(terraform output -raw blue_status)'
 
       # Check the status of the Green environment (pseudo-code)
       - name: Green environment status
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         id: green_status
         run: echo '::set-output name=status::$(terraform output -raw green_status)'
 
       # Switch traffic to the Green environment if the Blue environment is currently live (pseudo-code)
       - name: Switch traffic to Green environment
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
         if: steps.blue_status.outputs.status == 'live'
         run: |
           terraform apply -var='live_environment=green' -auto-approve
@@ -70,6 +77,7 @@ jobs:
 
       # Switch traffic to the Blue environment if the Green environment is currently live (pseudo-code)
       - name: Switch traffic to Blue environment
+        
         if: steps.green_status.outputs.status == 'live'
         run: |
           terraform apply -var='live_environment=blue' -auto-approve
